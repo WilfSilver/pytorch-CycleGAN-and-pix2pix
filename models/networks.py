@@ -274,6 +274,23 @@ class GANLoss(nn.Module):
                 loss = prediction.mean()
         return loss
 
+class FrobeniusLoss(nn.Module):
+    def __init__(self):
+        super(FrobeniusLoss, self).__init__()
+
+    def __call__(self, fake_img: torch.Tensor, real_img: torch.Tensor):
+        """Calculate loss given Generator's output and grount truth labels.
+
+        Parameters:
+            fake_img (tensor) - - tpyically the prediction output from a discriminator
+            real_img (tensor) - - if the ground truth label is for real images or fake images
+
+        Returns:
+            the calculated loss.
+        """
+        residual = real_img - fake_img
+        return residual.pow(2).sum().sqrt()
+
 
 def cal_gradient_penalty(netD, real_data, fake_data, device, type="mixed", constant=1.0, lambda_gp=10.0):
     """Calculate the gradient penalty loss, used in WGAN-GP paper https://arxiv.org/abs/1704.00028
