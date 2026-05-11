@@ -46,7 +46,7 @@ class Pix2PixModel(BaseModel):
         """
         BaseModel.__init__(self, opt)
         # specify the training losses you want to print out. The training/test scripts will call <BaseModel.get_current_losses>
-        self.loss_names = ["G_GAN", "G_L1", "D_real", "D_fake"]
+        self.loss_names = ["G_GAN", "G_L1", "G_perceptual", "D_real", "D_fake"]
         # specify the images you want to save/display. The training/test scripts will call <BaseModel.get_current_visuals>
         self.visual_names = ["real_A", "fake_B", "real_B"]
         # specify the models you want to save to the disk. The training/test scripts will call <BaseModel.save_networks> and <BaseModel.load_networks>
@@ -127,7 +127,7 @@ class Pix2PixModel(BaseModel):
         self.loss_G_perceptual = self.perceptual_loss(feat_fake, feat_real) * self.opt.lambda_perceptual
 
         # combine loss and calculate gradients
-        self.loss_G = self.loss_G_GAN + self.loss_G_L1
+        self.loss_G = self.loss_G_GAN + self.loss_G_L1 + self.loss_G_perceptual
         self.loss_G.backward()
 
     def optimize_parameters(self):
