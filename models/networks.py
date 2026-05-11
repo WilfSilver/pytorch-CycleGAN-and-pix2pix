@@ -3,6 +3,7 @@ import torch.nn as nn
 from torch.nn import init
 import functools
 from torch.optim import lr_scheduler
+import torchvision.models as models
 
 
 ###############################################################################
@@ -603,3 +604,25 @@ class PixelDiscriminator(nn.Module):
     def forward(self, input):
         """Standard forward."""
         return self.net(input)
+
+class VGG19FeatureExtractor(nn.Module):
+    """Feature extractor for perceptual loss. Copied from https://github.com/pratox1112/Pix2Pix_ReImplementation"""
+
+    def __init__(self, layer_index=16):
+        super().__init__()
+
+        vgg = models.vgg19(weights=models.VGG19_Weights.IMAGENET1K_V1).features
+        self.features = nn.Sequential(*list(vgg[:layer_index])).eval()
+
+        for p in self.features.parameters():
+            p.requires_grad = False
+
+        mean = torch.tensor([0.485, 0.456, 0.406]).view(1, 3, 1, 1)
+        std = torch.tensor([0.229, 0.224, 0.225]).view(1, 3, 1, 1)
+        self.register_buffer('mean', mean)
+        self.register_buffer('std', std)
+
+    def forward(self, x):
+        # convert from [0,1] to normalized ImageNet
+        x = (x - self.mean) / self.std
+        return self.features(x)
