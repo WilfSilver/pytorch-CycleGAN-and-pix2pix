@@ -84,7 +84,7 @@ for i in range(device, len(all_possibilities), num_devices):
 
     cmd = ["python", "test.py"] + test_default_params + opts + ["--name", name]
     print("! " + " ".join(cmd))
-    res = subprocess.run(cmd, env=env)
+    res = subprocess.run(cmd, env=env, capture_output=True)
 
     lines = res.stdout.splitlines()
     for line in lines[::-1]:
