@@ -34,6 +34,7 @@ test_default_params = base_params + [
 # 2: --netG unet_256 resnet_6blocks
 params_to_test = {
     "--netG": ["unet_256", "resnet_9blocks"],
+
     "--max_dataset_size": [200, 400],
     "--lr_policy": ["linear", "plateau"],
     "--lr": [0.0002, 0.0003],
@@ -82,7 +83,9 @@ for i in range(device, len(all_possibilities), num_devices):
     print("! " + " ".join(cmd))
     subprocess.run(cmd, env=env)
 
-    cmd = ["python", "test.py"] + test_default_params + opts + ["--name", name]
+    netg_i = opts.index("--netG") + 1
+
+    cmd = ["python", "test.py"] + test_default_params + ["--name", name, "--netG", opts[netg_i]]
     print("! " + " ".join(cmd))
     res = subprocess.run(cmd, env=env, capture_output=True)
 
