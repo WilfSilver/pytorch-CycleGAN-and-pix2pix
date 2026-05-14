@@ -61,7 +61,8 @@ def init_ddp():
         device = torch.device(f"cuda:{local_rank}")
         torch.cuda.set_device(local_rank)
     elif torch.cuda.is_available():
-        cuda = 0 if "CUDA" in os.environ else int(os.environ["CUDA"])
+        cuda = int(os.environ["CUDA"]) if "CUDA" in os.environ else 0
+        print(f"CUDA: {cuda}")
         device = torch.device(f"cuda:{cuda}")
         torch.cuda.set_device(cuda)
     else:
