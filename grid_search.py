@@ -73,7 +73,7 @@ all_possibilities = gen_possibilities(params_to_test)
 
 num_devices = 10
 device = int(sys.argv[1])
-env = dict(os.environ, WORLD_SIZE="5", LOCAL_RANK=sys.argv[2])
+env = dict(os.environ, CUDA=sys.argv[2])
 for i in range(device, len(all_possibilities), num_devices):
     opts = all_possibilities[i]
     name = get_name(opts)
