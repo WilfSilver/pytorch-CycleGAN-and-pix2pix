@@ -47,7 +47,7 @@ class Pix2PixModel(BaseModel):
         BaseModel.__init__(self, opt)
         # specify the training losses you want to print out. The training/test scripts will call <BaseModel.get_current_losses>
         self.loss_names = ["G_GAN", "G_L1", "D_real", "D_fake"]
-        if opt.lambda_perceptual is not None:
+        if hasattr(opt, "lambda_perceptual") and opt.lambda_perceptual is not None:
             self.loss_names.append("G_perceptual")
 
         # specify the images you want to save/display. The training/test scripts will call <BaseModel.get_current_visuals>
